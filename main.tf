@@ -1,8 +1,7 @@
 ## creating security group for LoadBalancer module ###
 resource "aws_security_group" "SG" {
   name        = "${var.name}-alb-${var.env}-sg"
-  description = "${var.name}-alb-${var.env}
--sg"
+  description = "${var.name}-alb-${var.env}-sg"
   vpc_id = var.vpc_id
   ingress {
     from_port        = var.port
