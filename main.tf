@@ -48,6 +48,7 @@ resource "aws_lb" "alb" {
 
 #### Creating Listener for the Load Balancer #####
 resource "aws_lb_listener" "listener" {
+  count             = var.name == "public" ? 1 : 0
   load_balancer_arn = aws_lb.alb.arn
   port              = 443
   protocol          = "HTTPS"
@@ -68,7 +69,8 @@ resource "aws_lb_listener" "listener" {
 
 
 ### Creating another Listener to redirect HTTP traffic to HTTPS
-resource "aws_lb_listener" "http_traffic" {
+resource "aws_lb_listener" "public" {
+  count             = var.name == "public" ? 1 : 0
   load_balancer_arn = aws_lb.alb.arn
   port              = "80"
   protocol          = "HTTP"
@@ -83,3 +85,21 @@ resource "aws_lb_listener" "http_traffic" {
     }
   }
 }
+
+resource "aws_lb_listener" "private" {
+  count             = var.name == "private" ? 1 : 0
+  load_balancer_arn = aws_lb.alb.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Default Error"
+      status_code  = "500"
+    }
+  }
+}
+

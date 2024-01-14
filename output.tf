@@ -3,5 +3,5 @@ output "lb_dns_name" {
 }
 
 output "listener_arn" {
-  value = aws_lb_listener.listener.arn
+  value = var.name == "public" ? aws_lb_listener.listener[0].arn : aws_lb_listener.private[0].arn
 }
